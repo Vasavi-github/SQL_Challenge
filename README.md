@@ -1,7 +1,7 @@
 # SQL_Challenge
 This is an 8 week SQL Challenge from Danny ma's Weekly challenge
 Case Study Questions
---1.What is the total amount each customer spent at the restaurant?
+#1.What is the total amount each customer spent at the restaurant?
 SELECT s.customer_id,
 	SUM(m.price) as amount_spent
 FROM sales as s
