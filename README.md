@@ -11,3 +11,8 @@ on s.product_id=m.product_id
 GROUP BY s.customer_id
 ORDER BY amount_spent DESC
 ```
+| Tables        | Are           |
+| ------------- |:-------------:|
+| 	A	|	76	|
+|	B	|	74	|
+|	C	|	36	| 
