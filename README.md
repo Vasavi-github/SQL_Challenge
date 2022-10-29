@@ -1,8 +1,7 @@
 # [8-Week SQL Challenge] By Danny Ma (https://8weeksqlchallenge.com/) 
 
 # Case Study #1 - Danny's Diner
-<p align="center">
-<img src="/IMG/org-1.png" width=20% height=20%>
+
   
 ---
 
