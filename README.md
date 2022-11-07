@@ -1,14 +1,12 @@
-# [8-Week SQL Challenge] By Danny Ma (https://8weeksqlchallenge.com/) 
+# [8-Week SQL Challenge] By Danny (https://8weeksqlchallenge.com/) 
 
 # Case Study #1 - Danny's Diner
-
-  
 ---
 
 ## Problem Statement
 
 > Danny wants to use the data to answer a few simple questions about his customers, especially about their visiting patterns, how much money they’ve spent and also which menu items are their favourite. Having this deeper connection with his customers will help him deliver a better and more personalised experience for his loyal customers.
-# 🍜 Case Study #1 - Danny's Diner
+# Case Study #1 - Danny's Diner
 <p align="center">
 <img src="/IMG/org-1.png" width=40% height=40%>
   
@@ -87,7 +85,7 @@ The final members table captures the ```join_date``` when a ```customer_id``` jo
 
  </details>
 
- ## 🚀 Solutions
+ ##  Solutions
 
 ### **Q1. What is the total amount each customer spent at the restaurant?**
 ```sql
@@ -397,4 +395,4 @@ from temp_cte;
 
 ```
 
-<p>&copy; 2022 Mukul Sharma</p>
+
