@@ -149,47 +149,57 @@ where ranking = 1;
 
 ### **Q4. What is the most purchased item on the menu and how many times was it purchased by all customers?**
 ```sql
-select b.product_name, count(a.order_date) as item_bought 
-from dannys_diner.sales a
-left join dannys_diner.menu b
-on a.product_id = b.product_id
-group by b.product_name
-order by item_bought desc
-limit 1;
+SELECT
+    product_name,
+    COUNT(product_name)AS most_purchased
+FROM dannys_dinner.sales s
+LEFT JOIN dannys_dinner.menu m
+ON s.product_id = m.product_id
+GROUP BY product_name
+ORDER BY most_purchased DESC
+LIMIT 1;
 ```
 
-| product_name | item_bought |
+| product_name | most_purchased |
 |-------------|--------------|
 | ramen         | 8        |
 
 ---
-
+The most popular item on the menu is ramen and it was purchased by customers 8 times.
+<br></br>
 ### **Q5. Which item was the most popular for each customer?**
 ```sql
-with temp as(
-    select a.customer_id, b.product_name, count(a.order_date) as item_bought_count,
-    dense_rank() over (partition by a.customer_id order by count(a.order_date) desc) ranking 
-    from dannys_diner.sales a 
-    left join dannys_diner.menu b
-    on a.product_id = b.product_id
-    group by a.customer_id, b.product_name
+WITH popular_item AS(
+SELECT 
+    s.customer_id,
+    product_name,
+  
+    COUNT(s.product_id) AS popular,
+    DENSE_RANK() OVER(PARTITION BY customer_id ORDER BY COUNT(s.product_id)DESC) AS ranking
+FROM dannys_dinner.sales s
+INNER JOIN dannys_dinner.menu m
+ON s.product_id = m.product_id
+GROUP BY s.customer_id, m.product_name
 )
-
-SELECT customer_id, product_name, item_bought_count
-FROM temp
+SELECT 
+    customer_id,
+    product_name,
+    popular
+FROM popular_item
 WHERE ranking = 1;
-
 ```
 
-| customer_id | product_name | item_bought_count |
+| customer_id | product_name | popular |
 |-------------|--------------|-------------------|
 | A           | ramen        | 3                 |
 | B           | curry        | 2                 |
 | B           | sushi        | 2                 |
 | B           | ramen        | 2                 |
 | C           | ramen        | 3                 |
-
 ---
+Ramen was the most popular for Customer A as this customer had ordered it 3 times. Sushi, curry, and ramen were all popular for Customer B as they all were ordered 2 times. Ramen was popular for Customer C as it was ordered 3 times.
+<br></br>
+
 
 
 ### **Q6. Which item was purchased first by the customer after they became a member?**
