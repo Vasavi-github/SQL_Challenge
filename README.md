@@ -259,14 +259,17 @@ WHERE purchase_ranking =1
 Customer A Purchased sushi and curry B purchased sushi on the day before they became member.
 ### **Q8. What is the total items and amount spent for each member before they became a member?**
 ```sql
-select a.customer_id, count(a.product_id) as total_items, sum(b.price) as total_amount
-from dannys_diner.sales a
-left join dannys_diner.menu b
-on a.product_id = b.product_id
-left join dannys_diner.members c
-on a.customer_id = c.customer_id
-where a.order_date < c.join_date
-group by a.customer_id;
+SELECT DISTINCT
+    s.customer_id,
+    COUNT(*)total_items,
+    SUM(price)total_amount
+FROM dannys_dinner.menu m
+LEFT JOIN dannys_dinner.sales s
+ON m.product_id=s.product_id
+LEFT JOIN dannys_dinner.members 
+ON s.customer_id = members.customer_id
+WHERE order_date < join_date
+GROUP BY s.customer_id
 
 ```
 
