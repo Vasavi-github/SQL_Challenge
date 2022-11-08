@@ -312,26 +312,30 @@ ORDER BY customer_id
 
 ### **Q10. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January?**
 ```sql
-with date_cte as (
-    select *,
-    DATE_ADD(join_date, INTERVAL 6 DAY) as valid_date
-    from dannys_diner.members
+WITH point_table AS(
+SELECT 
+    s.customer_id,
+    product_name,
+    order_date,
+    price,
+CASE WHEN s.order_date between members.join_date and (members.join_date+6) THEN 20*m.price
+    WHEN m.product_name = 'sushi' THEN m.price * 20
+    ELSE 10*price END AS points
+FROM dannys_dinner.sales s
+INNER JOIN dannys_dinner.menu m
+ON s.product_id=m.product_id
+INNER JOIN dannys_dinner.members
+ON s.customer_id=members.customer_id
+WHERE order_date< '2021-01-31'
 )
-
-select d.customer_id,
-sum(case
-when b.product_id = 1 then 20*b.price
-when a.order_date between d.join_date and d.valid_date then 20*b.PRICE
-else 10*b.price end) as pointer
-from date_cte d
-left join dannys_diner.sales a
-on d.customer_id = a.customer_id
-left join dannys_diner.menu b 
-on a.product_id = b.product_id
-where a.order_date < '2021-01-31'
-group by a.customer_id;
+SELECT 
+    customer_id, 
+    SUM(points) AS total_spent
+FROM point_table
+GROUP BY customer_id
+ORDER BY customer_id;
 ```
-| customer_id | pointer |
+| customer_id | total_spent |
 |-------------|---------|
 | A           | 1370    |
 | B           | 820     |
