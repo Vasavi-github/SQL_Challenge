@@ -196,32 +196,35 @@ WHERE ranking = 1;
 Ramen was the most popular for Customer A as this customer had ordered it 3 times. Sushi, curry, and ramen were all popular for Customer B as they all were ordered 2 times. Ramen was popular for Customer C as it was ordered 3 times.
 <br></br>
 
-
-
 ### **Q6. Which item was purchased first by the customer after they became a member?**
 ```sql
-with temp_cte as(
-    select a.customer_id, a.order_date,b.product_name,
-    dense_rank() over(partition by a.customer_id order by a.order_date) ranking 
-    from dannys_diner.sales a
-    inner join dannys_diner.members c
-    on a.customer_id = c.customer_id 
-    left join dannys_diner.menu b 
-    on a.product_id = b.product_id
-    where a.order_date >= c.join_date
-) 
-
-select customer_id, order_Date, product_name
-from temp_cte where ranking = 1;
-
+WITH item_purchased AS(
+SELECT 
+    s.customer_id,
+    product_name,
+    order_date,
+    members.join_date,
+    DENSE_RANK() OVER(PARTITION BY s.customer_id ORDER BY s.order_date) AS purchase_ranking
+FROM dannys_dinner.menu m
+INNER JOIN dannys_dinner.sales s
+ON m.product_id=s.product_id
+INNER JOIN dannys_dinner.members 
+ON s.customer_id = members.customer_id
+WHERE order_date >= join_date
+)
+SELECT 
+    customer_id,
+    order_date,
+    product_name
+FROM item_purchased
+WHERE purchase_ranking =1;
 ```
-
 | customer_id | order_Date | product_name |
 |-------------|------------|--------------|
 | A           | 2021-01-07 | curry        |
 | B           | 2021-01-11 | sushi        |
-
 ---
+Customer A purchased curry and B purchased sushi First after they became member.
 
 ### **Q7. Which item was purchased just before the customer became a member?**
 ```sql
