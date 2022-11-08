@@ -122,16 +122,21 @@ GROUP BY customer_id;
 
 ### **Q3. What was the first item from the menu purchased by each customer?**
 ```sql
-with ordered_sales as(
-    select a.customer_id, a.order_date, a.product_id,b.product_name, 
-    dense_rank() over(partition by a.customer_id order by a.order_date) ranking 
-    from dannys_diner.sales a 
-    left join dannys_diner.menu b
-    on a.product_id = b.product_id
+WITH first_purchase AS(
+SELECT 
+    customer_id,
+    product_name,
+    order_date,
+    DENSE_RANK()OVER(PARTITION BY customer_id ORDER BY order_date) AS order_rank
+FROM dannys_dinner.sales s
+LEFT JOIN dannys_dinner.menu m
+on s.product_id = m.product_id
 )
-select distinct customer_id, product_name
-from ordered_sales 
-where ranking = 1;
+SELECT DISTINCT
+    customer_id,
+    product_name,
+FROM first_purchase
+WHERE order_rank = 1
 ```
 
 | customer_id | product_name |
