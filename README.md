@@ -89,14 +89,17 @@ The final members table captures the ```join_date``` when a ```customer_id``` jo
 
 ### **Q1. What is the total amount each customer spent at the restaurant?**
 ```sql
-select a.customer_id, sum(b.price) as total_spend 
-from dannys_diner.sales a
-left join dannys_diner.menu b
-on a.product_id = b.product_id
-group by a.customer_id;
+SELECT
+    s.customer_id, 
+    SUM(m.price)total_price
+FROM dannys_dinner.sales s
+LEFT JOIN dannys_dinner.menu m
+ON s.product_id=m.product_id
+GROUP BY s.customer_id
+ORDER BY total_price DESC
 ```
 
-| customer_id | total_spent |
+| customer_id | total_price |
 | ----------- | ----------- |
 | A           | 76          |
 | B           | 74          |
