@@ -87,7 +87,7 @@ The final members table captures the ```join_date``` when a ```customer_id``` jo
 
  ##  Solutions
 
-### **Q1. What is the total amount each customer spent at the restaurant?**
+### ** Q1. What is the total amount each customer spent at the restaurant?**
 ```sql
 SELECT
     s.customer_id, 
@@ -96,7 +96,7 @@ FROM dannys_dinner.sales s
 LEFT JOIN dannys_dinner.menu m
 ON s.product_id=m.product_id
 GROUP BY s.customer_id
-ORDER BY total_price DESC
+ORDER BY total_price DESC;
 ```
 
 | customer_id | total_price |
@@ -109,12 +109,14 @@ ORDER BY total_price DESC
 
 ### **Q2. How many days has each customer visited the restaurant?**
 ```sql
-select customer_id, count(distinct order_date) as total_days 
-from dannys_diner.sales
-group by customer_id;
+SELECT 
+    customer_id,
+    COUNT(DISTINCT order_date)days_visited
+FROM dannys_dinner.sales
+GROUP BY customer_id;
 ```
 
-| customer_id | total_days |
+| customer_id | days_visited |
 |-------------|------------|
 | A           | 4          |
 | B           | 6          |
