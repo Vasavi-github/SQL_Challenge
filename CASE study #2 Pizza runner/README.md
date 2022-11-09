@@ -205,6 +205,7 @@ SELECT
 FROM pizza_runner.customer_orders;
 `````
 This is how the clean `customers_orders_temp` table looks like and we will use this table to run all our queries.
+---------------------
 |order_id|customer_id|pizza_id|exclusions|extras|order_time              |
 |--------|-----------|--------|----------|------|------------------------|
 |1       |101        |1       |          |      |2020-01-01T18:05:02.000Z|
