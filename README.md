@@ -372,34 +372,30 @@ ORDER BY customer_id;
 
 ```sql
 
-WITH dannys_table AS (
-    SELECT
-        sales.customer_id,
-        sales.order_date,
-        sales.product_id,
-        menu.product_name,
-        menu.price,
-        membrs.join_date
-    FROM dannys_diner.sales
-    INNER JOIN dannys_diner.menu
-        ON sales.product_id = menu.product_id
-    LEFT JOIN dannys_diner.members
-        ON sales.customer_id = members.customer_id
-)
-SELECT
-    customer_id,
-    order_date,
+WITH member_check AS(
+SELECT 
+    s.customer_id,
+    s.order_date,
     product_name,
     price,
-    (CASE 
-        WHEN order_date >= join_date THEN 'Y'
-        ELSE 'N'
-    END) AS member
-FROM dannys_table
-ORDER BY
-    customer_id ASC,
-    order_date ASC,
-    price DESC;
+    CASE WHEN s.order_date>= join_date THEN 'Y'
+    ELSE 'N' END AS member
+   
+FROM dannys_dinner.sales s
+LEFT JOIN dannys_dinner.menu as m
+ON s.product_id=m.product_id
+LEFT JOIN dannys_dinner.members
+ON s.customer_id=members.customer_id
+)
+SELECT 
+    customer_id, 
+    order_date, 
+    product_name,
+    price,
+    member
+FROM member_check
+ORDER BY customer_id,order_date,price DESC
+
 ```
 
 ---
