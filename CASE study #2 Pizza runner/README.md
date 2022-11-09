@@ -183,4 +183,24 @@ Data issues in the existing schema include:
 - Converting blanks, ```'null'``` and ```NaN``` into null values for cancellation
 - Saving the transformations in a temporary table
 
-**Result:**
+## Result of Data cleaning
+Our course of action to clean the table:
+- Create a temporary table with all the columns
+- Remove null values in `exlusions` and `extras` columns and replace with blank space ' '.
+
+````sql
+CREATE TEMP TABLE customer_orders_temp AS
+SELECT 
+    order_id,
+    customer_id,
+    pizza_id,
+    CASE 
+        WHEN exclusions IS NULL OR exclusions LIKE 'null' THEN ''
+        ELSE exclusions
+        END AS exclusions,
+    CASE 
+        WHEN extras = 'null' OR extras IS NULL OR extras ='NaN' THEN ''
+        ELSE extras END AS extras,
+     order_time
+FROM pizza_runner.customer_orders;
+`````
