@@ -226,22 +226,31 @@ This is how the clean `customers_orders_temp` table looks like and we will use t
 
 ### 🔨 Table: runner_orders
 ````sql
-CREATE TEMP TABLE runner_orders_temp AS
+DROP TABLE IF EXISTS temp_runner_orders;
+CREATE TEMP TABLE temp_runner_orders AS
 SELECT
-    order_id,
-    runner_id,
-CASE WHEN pickup_time LIKE 'null' THEN ''
-    ELSE pickup_time END AS pickup_time,
-CASE WHEN distance LIKE 'null' THEN ''
-    ELSE distance END AS distance,
-CASE WHEN duration LIKE 'null' THEN ''
-     WHEN duration LIKE '%mins' THEN TRIM('mins' FROM duration)
-     WHEN duration LIKE '%minutes' THEN TRIM('minutes' FROM duration)
-     WHEN duration LIKE '%minute' THEN TRIM('minute' FROM duration)
-    ELSE duration END AS duration,
-CASE WHEN cancellation LIKE 'NaN' OR cancellation LIKE 'null' OR cancellation IS NULL THEN ''
-    ELSE cancellation END AS cancellation
+  order_id,
+  runner_id,
+  CAST(CASE WHEN pickup_time = 'null' THEN NULL 
+       ELSE pickup_time END AS TIMESTAMP) + INTERVAL '1 year' AS pickup_time,
+  CAST (
+    CASE
+	  WHEN distance = 'null' THEN NULL
+	  WHEN distance LIKE '%km' THEN TRIM(distance, 'km') ELSE distance
+    END AS FLOAT),
+  CAST(
+	CASE
+	  WHEN duration = 'null' THEN NULL
+	  WHEN duration LIKE '%mins' THEN TRIM(duration, 'mins')
+	  WHEN duration LIKE '%minute' THEN TRIM(duration, 'minute')
+	  WHEN duration LIKE '%minutes' THEN TRIM(duration, 'minutes') ELSE duration
+    END AS FLOAT),
+  CASE WHEN cancellation = 'null' or cancellation = '' THEN NULL ELSE cancellation END
 FROM pizza_runner.runner_orders;
+```````
+--------
+``````````sql
+SELECT * FROM temp_runner_orders
 ``````````
 ----------------
 | order_id | runner_id | pickup_time         | distance | duration | cancellation            |
