@@ -423,23 +423,25 @@ ORDER BY customer_id,order_date,price DESC
 
 ```sql
 
-with temp_cte as(select a.customer_id, a.order_date, b.product_name,
-b.price,
-CASE
-WHEN c.join_date > a.order_date THEN 'N'
-WHEN c.join_date <= a.order_date THEN 'Y'
-ELSE 'N' end as member
-from dannys_diner.sales a
-left join dannys_diner.menu b
-on a.product_id = b.product_id
-left join dannys_diner.members C
-on a.customer_id = c.customer_id
-order by a.customer_id, a.order_date, b.product_name)
-
-select *, CASE
-when member = 'N' then 'null'
-else rank() over(PARTITION by customer_id, member order by order_date) end as ranking
-from temp_cte;
+WITH member_check AS(
+SELECT 
+    s.customer_id,
+    s.order_date,
+    product_name,
+    price,
+    CASE WHEN s.order_date>= join_date THEN 'Y'
+    ELSE 'N' END AS member 
+FROM dannys_dinner.sales s
+LEFT JOIN dannys_dinner.menu as m
+ON s.product_id=m.product_id
+LEFT JOIN dannys_dinner.members
+ON s.customer_id=members.customer_id
+)
+SELECT *,
+CASE WHEN member = 'N' THEN NULL
+ELSE RANK()OVER(PARTITION BY customer_id, member ORDER BY order_date) END AS ranking
+FROM member_check
+ORDER BY customer_id,order_date,price DESC
 
 ```
 
