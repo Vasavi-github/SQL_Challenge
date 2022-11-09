@@ -153,3 +153,34 @@ This table contains all of the **```topping_name```** values with their correspo
 |12        |Tomato Sauce|
 
 </details>
+## ♻️ Data Cleaning
+
+### **Data Issues**
+
+Data issues in the existing schema include:
+
+* **```customer_orders``` table**
+  - ```null``` values entered as text
+  - using both ```NaN``` and ```null``` values
+* **```runner_orders``` table**
+  - ```null``` values entered as text
+  - using both ```NaN``` and ```null``` values
+  - units manually entered in ```distance``` and ```duration``` columns
+
+### **Data Cleaning**
+
+**```customer_orders```**
+- Converting ```null``` and ```NaN``` values into blanks ```''``` in ```exclusions``` and ```extras```
+  - Blanks indicate that the customer requested no extras/exclusions for the pizza, whereas ```null``` values would be ambiguous.
+- Saving the transformations in a temporary table
+  - We want to avoid permanently changing the raw data via ```UPDATE``` commands if possible.
+
+**```runner_orders```**
+
+- Converting ```'null'``` text values into null values for ```pickup_time```, ```distance``` and ```duration```
+- Extracting only numbers and decimal spaces for the distance and duration columns
+  - Use regular expressions and ```NULLIF``` to convert non-numeric entries to null values
+- Converting blanks, ```'null'``` and ```NaN``` into null values for cancellation
+- Saving the transformations in a temporary table
+
+**Result:**
