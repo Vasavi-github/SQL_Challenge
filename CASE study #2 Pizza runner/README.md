@@ -313,6 +313,25 @@ GROUP BY c.pizza_id,pizza_name;
 ````````
 ![image](https://user-images.githubusercontent.com/107137479/201222250-dea54124-b5d7-458d-88a3-3020a58ab7b0.png)
 -  9 Meatlovers and 3 Vegetarian pizaas were delivered.
+###  5. How many Vegetarian and Meatlovers were ordered by each customer?
+```````sql
+SELECT 
+    customer_id,
+SUM(CASE WHEN p.pizza_name='Meatlovers' THEN 1 ELSE 0 END)AS meatlovers,
+SUM(CASE WHEN p.pizza_name='Vegetarian' THEN 1 ELSE 0 END)AS vegetarian 
+FROM customer_orders_temp c
+LEFT JOIN pizza_runner.pizza_names p
+ON c.pizza_id=p.pizza_id
+GROUP BY c.customer_id
+ORDER BY customer_id
+``````````
+![image](https://user-images.githubusercontent.com/107137479/201225146-7dba1fa8-f815-43b4-856f-ced895790a4f.png)
+-  Customer 101 ordered 2 Meatlovers pizzas and 1 Vegetarian pizza.
+-  Customer 102 ordered 2 Meatlovers pizzas and 2 Vegetarian pizzas.
+-  Customer 103 ordered 3 Meatlovers pizzas and 1 Vegetarian pizza.
+-  Customer 104 ordered 3 Meatlovers pizza.
+-  Customer 105 ordered 1 Vegetarian pizza.
+---------------------------------------------
 
 
 
