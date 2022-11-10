@@ -266,9 +266,12 @@ SELECT * FROM temp_runner_orders
 | 9        | 2         |                     |          |          | Customer Cancellation   |
 | 10       | 1         | 2020-01-11 18:50:20 | 10       | 10       |                         |
 --------
-# 🍕 Case Study #2 - Pizza Runner
 
-## 🍝 A. Pizza Metrics -Solution
+<details>
+<summary> 
+🍝 CASE Study#2 A. Pizza Metrics -Solution	
+</summary>
+
 
 ### 1. How many pizzas were ordered?
 
