@@ -266,3 +266,67 @@ SELECT * FROM temp_runner_orders
 | 9        | 2         |                     |          |          | Customer Cancellation   |
 | 10       | 1         | 2020-01-11 18:50:20 | 10       | 10       |                         |
 --------
+# 🍕 Case Study #2 - Pizza Runner
+
+## 🍝 A. Pizza Metrics -Solution
+
+### 1. How many pizzas were ordered?
+
+````sql
+SELECT COUNT(*) AS pizza_order_count
+FROM customer_orders_temp;
+````
+![image](https://user-images.githubusercontent.com/107137479/201217117-610abecf-0953-4aad-95e4-238a93f578dd.png)
+- 14 total pizzas ordered.
+### 2. How many unique customer orders were made?
+`````sql
+SELECT 
+COUNT(DISTINCT order_id)unique_orders_count
+FROM customer_orders_temp;
+```````
+![1](https://user-images.githubusercontent.com/107137479/201216127-06276d15-bbb7-4880-9e44-9ef813435293.jpg)
+- There are 10 unique customer orders
+### 3. How many successful orders were delivered by each runner?
+````sql
+SELECT
+runner_id,
+COUNT(order_id)suceessful_orders
+FROM temp_runner_orders
+WHERE distance IS NOT NULL
+GROUP BY runner_id
+ORDER BY runner_id;
+``````
+![image](https://user-images.githubusercontent.com/107137479/201219315-4405ba4f-b009-45f7-98dd-e15bc483229a.png)
+-  runner_id 1, 2, 3 delivered 4,3,1 successful orders respectively.
+###  4. How many of each type of pizza was delivered?
+``````sql
+SELECT 
+     p.pizza_name,
+     COUNT(c.pizza_id)count_of_pizza
+FROM customer_orders_temp c
+LEFT JOIN pizza_runner.pizza_names p
+ON c.pizza_id=p.pizza_id
+LEFT JOIN temp_runner_orders
+ON c.order_id=temp_runner_orders.order_id
+WHERE distance IS NOT NULL
+GROUP BY c.pizza_id,pizza_name;
+````````
+![image](https://user-images.githubusercontent.com/107137479/201222250-dea54124-b5d7-458d-88a3-3020a58ab7b0.png)
+-  9 Meatlovers and 3 Vegetarian pizaas were delivered.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
