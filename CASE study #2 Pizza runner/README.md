@@ -335,7 +335,8 @@ ORDER BY customer_id
 -  Customer 104 ordered 3 Meatlovers pizza.
 -  Customer 105 ordered 1 Vegetarian pizza.
 ---------------------------------------------
-
+##  6. What was the maximum number of pizzas delivered in a single order?
+	
 
 
 
