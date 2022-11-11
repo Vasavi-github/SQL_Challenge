@@ -364,12 +364,48 @@ ORDER BY customer_id;
 ![image](https://user-images.githubusercontent.com/107137479/201361925-f96748c3-db33-4967-a91a-88af880441c3.png)
 -  Customer 101 and 102 likes pizzas as it is.
 -  Customer 103, 104 and 105 have their own preference for pizza topping and requested at least 1 change (extra or exclusion topping) on their pizza.
+### 8. How many pizzas were delivered that had both exclusions and extras?
+```sql
+WITH pizzas_both AS(
+SELECT
+    o.order_id,
+    exclusions,
+    extras
+FROM temp_runner_orders as o
+LEFT JOIN customer_orders_temp c
+ON o.order_id=c.order_id
+WHERE exclusions != '' AND extras != '' 
+AND distance IS NOT NULL
+)
+SELECT COUNT(order_id)pizzas_with_modifications
+FROM pizzas_both
+`````
+![image](https://user-images.githubusercontent.com/107137479/201371175-59d36128-f1a3-4c99-b6eb-41ec8bd47431.png)
+-  Only one order_id was delivered which had both extras and exclusions.
+###  9. What was the total volume of pizzas ordered for each hour of the day?
+````sql
+SELECT 
+    COUNT(order_id) pizza_ordered,
+    DATE_PART('HOUR', order_time::TIMESTAMP)AS hour_of_the_day
+FROM customer_orders_temp
+GROUP BY hour_of_the_day
+ORDER BY hour_of_the_day;	
+`````
+![image](https://user-images.githubusercontent.com/107137479/201382904-913ffd18-4e96-4d90-af67-ad92446edaa6.png)
 
+###   10. What was the volume of orders for each day of the week?
+````sql
+SELECT
+    to_char(order_time,'Day')AS days,
+    EXTRACT(dow FROM order_time)dow,
+       COUNT(order_id) AS volume
+FROM customer_orders_temp
+GROUP BY days,dow
+ORDER BY days;		
+``````````
+![image](https://user-images.githubusercontent.com/107137479/201417843-8e87fa3b-e4a7-4f6e-bde3-4379305b2a76.png)
 
-
-
-
-
+-  Considering Monday as the First Day of the week we have above result for each day of the week.
 
 
 
