@@ -336,9 +336,34 @@ ORDER BY customer_id
 -  Customer 105 ordered 1 Vegetarian pizza.
 ---------------------------------------------
 ##  6. What was the maximum number of pizzas delivered in a single order?
-	
-
-
+``````sql
+SELECT
+    c.order_id,
+   COUNT(pizza_id) number_of_pizzas
+FROM customer_orders_temp AS c
+LEFT JOIN temp_runner_orders r
+ON c.order_id=r.order_id
+WHERE distance IS NOT NULL 
+GROUP BY c.order_id
+ORDER BY number_of_pizzas DESC
+LIMIT 1;
+```````
+![image](https://user-images.githubusercontent.com/107137479/201351936-e0142513-126a-49b3-85da-806d518e2424.png)
+-  Maximumum number of pizzas delivered is 3 by order_id 4	
+-----------	
+##  7. For each customer, how many delivered pizzas had at least 1 change and how many had no changes?
+``````````sql
+SELECT 
+    customer_id,
+    SUM(CASE WHEN exclusions != '' OR extras != '' THEN 1 ELSE 0 END) AS changes,
+    SUM(CASE WHEN exclusions = '' AND extras = '' THEN 1 ELSE 0 END) AS no_change
+FROM customer_orders_temp
+GROUP BY customer_id
+ORDER BY customer_id;
+```````````````
+![image](https://user-images.githubusercontent.com/107137479/201361925-f96748c3-db33-4967-a91a-88af880441c3.png)
+-  Customer 101 and 102 likes pizzas as it is.
+-  Customer 103, 104 and 105 have their own preference for pizza topping and requested at least 1 change (extra or exclusion topping) on their pizza.
 
 
 
