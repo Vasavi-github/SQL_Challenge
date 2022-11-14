@@ -267,9 +267,11 @@ SELECT * FROM temp_runner_orders
 | 10       | 1         | 2020-01-11 18:50:20 | 10       | 10       |                         |
 --------
 
+## 🚀 Solutions
+
 <details>
 <summary> 
-🍝 CASE Study#2 A. Pizza Metrics -Solution	
+Pizza Metrics
 </summary>
 
 
@@ -407,7 +409,12 @@ ORDER BY days;
 
 -  Considering Monday as the First Day of the week we have above result for each day of the week.
 
+</details>
 
+<details>
+<summary>
+Runner and Customer Experience
+</summary>
 
 
 
