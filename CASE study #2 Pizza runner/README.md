@@ -415,7 +415,31 @@ ORDER BY days;
 <summary>
 Runner and Customer Experience
 </summary>
-
+	
+###  **1. How many runners signed up for each 1 week period? (i.e. week starts 2021-01-01)**
+```sql
+SELECT
+    CASE WHEN registration_date BETWEEN '2021-01-01' AND '2021-01-07' THEN 'Week 1'
+        WHEN registration_date BETWEEN '2021-01-08' AND '2021-01-14'THEN 'Week 2'
+        ELSE 'Week 3' END AS week_period,
+        COUNT(runner_id)
+FROM pizza_runner.runners
+GROUP BY week_period;
+```
+![image](https://user-images.githubusercontent.com/107137479/201778349-09264b5e-bf53-454d-b2c1-a3db0e67cd30.png)
+----------
+###  2.What was the average time in minutes it took for each runner to arrive at the Pizza Runner HQ to pickup the order?
+`````sql
+SELECT 
+    runner_id,
+    ROUND(AVG(EXTRACT(min FROM ( r.pickup_time -c.order_time))),2) AS time_taken
+FROM temp_runner_orders r
+LEFT JOIN customer_orders_temp c
+ON r.order_id=c.order_id
+GROUP BY runner_id
+ORDER BY runner_id;
+```````````
+![image](https://user-images.githubusercontent.com/107137479/201787231-88ecda57-31e2-4529-86d5-991d6ece6ea9.png)
 
 
 
