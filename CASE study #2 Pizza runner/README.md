@@ -441,7 +441,46 @@ ORDER BY runner_id;
 ```````````
 ![image](https://user-images.githubusercontent.com/107137479/201787231-88ecda57-31e2-4529-86d5-991d6ece6ea9.png)
 
+###  3. Is there any relationship between the number of pizzas and how long the order takes to prepare?
+```sql
+SELECT
+   r.runner_id,
+    COUNT(c.order_id)number_of_pizzas,
+    ROUND(AVG(EXTRACT(min FROM ( r.pickup_time -c.order_time))),2) AS time_taken
+FROM temp_runner_orders r
+RIGHT JOIN customer_orders_temp c
+ON r.order_id=c.order_id
+WHERE cancellation IS NULL
+GROUP BY runner_id
+ORDER BY runner_id;
+```
+![image](https://user-images.githubusercontent.com/107137479/202011469-d2558e38-8737-48a9-bfbe-ba738dc2d7f0.png)
 
-
-
-
+###  4.What was the average distance travelled for each customer?
+```sql
+SELECT 
+    c.customer_id,
+    ROUND(AVG(distance))AS distance_travelled
+FROM temp_runner_orders r
+RIGHT JOIN customer_orders_temp c
+ON r.order_id=c.order_id
+WHERE cancellation IS NULL
+GROUP BY c.customer_id;
+```
+![image](https://user-images.githubusercontent.com/107137479/202011332-adaa27af-6257-492d-905a-0481b9b3cbf9.png)
+###  5.What was the difference between the longest and shortest delivery times for all orders?
+```sql
+WITH delivery_time AS(
+SELECT 
+    MAX(duration)longest,
+    MIN(duration)shortest
+FROM temp_runner_orders
+)
+SELECT 
+    (longest-shortest)AS difference_between_logest_and_shortest_delivery
+FROM delivery_time
+```
+![image](https://user-images.githubusercontent.com/107137479/202019732-14996a98-8e11-4236-9364-2f9880270016.png)
+###   6. What was the average speed for each runner for each delivery and do you notice any trend for these values
+```sql
+```
