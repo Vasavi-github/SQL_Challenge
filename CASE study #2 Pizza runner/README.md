@@ -502,3 +502,11 @@ GROUP BY runner_id
 ORDER BY runner_id;
 ```
 ![image](https://user-images.githubusercontent.com/107137479/202320137-6bebef63-d2f8-4572-8758-ac6ab1404f1b.png)
+</details>
+
+<details>
+<summary>
+Ingredient Optimisation
+</summary>
+
+### **1. What are the standard ingredients for each pizza?**
