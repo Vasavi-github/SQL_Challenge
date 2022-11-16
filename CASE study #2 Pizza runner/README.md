@@ -483,4 +483,22 @@ FROM delivery_time
 ![image](https://user-images.githubusercontent.com/107137479/202019732-14996a98-8e11-4236-9364-2f9880270016.png)
 ###   6. What was the average speed for each runner for each delivery and do you notice any trend for these values
 ```sql
+SELECT
+    r.runner_id,
+    ROUND(CAST(duration/60  AS NUMERIC),4)AS duration_in_hr,
+    ROUND(CAST(distance/ duration * 60 as NUMERIC),4) avg_speed
+FROM temp_runner_orders r
+WHERE cancellation IS NULL
 ```
+![image](https://user-images.githubusercontent.com/107137479/202297519-ca0ee1ab-cf32-433f-8163-d04d8bd9f105.png)
+- It is difficult to predict the trend using the above value.
+###  7.What is the successful delivery percentage for each runner?
+```sql
+SELECT
+    runner_id,
+    SUM(CASE WHEN cancellation IS NULL THEN 1 ELSE 0 END)*100/COUNT(order_id)AS success
+FROM temp_runner_orders
+GROUP BY runner_id
+ORDER BY runner_id;
+```
+![image](https://user-images.githubusercontent.com/107137479/202320137-6bebef63-d2f8-4572-8758-ac6ab1404f1b.png)
