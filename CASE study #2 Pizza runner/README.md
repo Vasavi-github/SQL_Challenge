@@ -510,7 +510,7 @@ Ingredient Optimisation
 </summary>
 
 ### **1. What are the standard ingredients for each pizza?**
-``sql
+```sql
 WITH pizzaa_topping_id_table AS(
 SELECT
     pizza_id,
