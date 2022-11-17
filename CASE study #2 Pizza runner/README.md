@@ -510,3 +510,20 @@ Ingredient Optimisation
 </summary>
 
 ### **1. What are the standard ingredients for each pizza?**
+``sql
+WITH pizzaa_topping_id_table AS(
+SELECT
+    pizza_id,
+    REGEXP_SPLIT_TO_TABLE(toppings, '[,\s]+')::INTEGER AS topping_id
+FROM pizza_runner.pizza_recipes
+)
+SELECT 
+    pizza_id,
+    p.topping_id,
+    t.topping_name
+FROM pizzaa_topping_id_table p
+LEFT JOIN pizza_runner.pizza_toppings t
+ON p.topping_id=t.topping_id
+GROUP BY pizza_id,p.topping_id,t.topping_name
+```
+![image](https://user-images.githubusercontent.com/107137479/202328163-38b6aa18-c0f0-4cf9-875b-a9720782c066.png)
