@@ -527,3 +527,44 @@ ON p.topping_id=t.topping_id
 GROUP BY pizza_id,p.topping_id,t.topping_name
 ```
 ![image](https://user-images.githubusercontent.com/107137479/202328163-38b6aa18-c0f0-4cf9-875b-a9720782c066.png)
+### **2.What was the most commonly added extra?**
+```sql
+WITH common_extra AS(
+SELECT
+    pizza_id,
+    UNNEST(STRING_TO_ARRAY(extras, ',')::int[])AS topping_id
+FROM customer_orders_temp
+WHERE extras != ''
+)
+SELECT
+    topping_name,
+    COUNT(c.topping_id) AS most_commonly_added_extras
+FROM common_extra c
+LEFT JOIN pizza_runner.pizza_toppings p
+ON c.topping_id=p.topping_id
+GROUP BY topping_name
+ORDER BY most_commonly_added_extras DESC
+LIMIT 1;
+```
+![image](https://user-images.githubusercontent.com/107137479/203090580-ae5f6ac4-f399-448b-9267-291660190ebf.png)
+### **3. What was the most common exclusion?**
+```sql
+WITH common_exclusion AS(
+SELECT
+    pizza_id,
+    UNNEST(STRING_TO_ARRAY(exclusions,',')::int[])AS topping_id
+FROM customer_orders_temp
+WHERE exclusions != ''
+)
+SELECT 
+    topping_name, 
+    COUNT(e.topping_id)AS most_exclusions_count
+FROM common_exclusion e
+LEFT JOIN pizza_runner.pizza_toppings p
+ON e.topping_id=p.topping_id
+GROUP BY topping_name
+ORDER BY most_exclusions_count DESC
+LIMIT 1; 
+```
+![image](https://user-images.githubusercontent.com/107137479/203094834-1c98eb75-8170-46a7-ae8f-28721967bbfd.png)
+
