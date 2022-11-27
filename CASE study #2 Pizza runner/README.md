@@ -568,3 +568,47 @@ LIMIT 1;
 ```
 ![image](https://user-images.githubusercontent.com/107137479/203094834-1c98eb75-8170-46a7-ae8f-28721967bbfd.png)
 
+### **4.Generate an order item for each record in the customers_orders table in the format of one of the following:**
+#### Meat Lovers
+#### Meat Lovers - Exclude Beef
+#### Meat Lovers - Extra Bacon
+#### Meat Lovers - Exclude Cheese, Bacon - Extra Mushroom, Peppers
+
+```sql
+SELECT order_id, 
+       CONCAT(pizza_name,
+              ' ',
+              CASE WHEN COUNT(exclusions)>0 THEN ' - Exclude '
+              ELSE '' END,
+              STRING_AGG(exclusions,' , '),
+              CASE WHEN COUNT(extras)>0 THEN ' - Extra '
+              ELSE '' END,
+              STRING_AGG(extras,' , ')
+              ) AS pizza_name_exclusions_and_extras
+FROM 
+    (WITH rank_add AS(
+    SELECT *, 
+    ROW_NUMBER () OVER() AS rank
+    FROM customer_orders_temp
+    )
+    SELECT 
+    rank, 
+    order_id,
+    pizza_name,
+    CASE WHEN exclusions != '' AND topping_id IN (SELECT UNNEST(string_to_array(exclusions,',')::INT[]))
+    THEN topping_name
+    END AS exclusions,
+    CASE WHEN extras != '' AND topping_id IN (SELECT UNNEST(string_to_array(extras,',')::INT[]))
+    THEN topping_name
+    END AS extras
+    FROM  pizza_runner.pizza_toppings pt, rank_add ra
+    JOIN pizza_runner.pizza_names pn
+    ON ra.pizza_id=pn.pizza_id
+    GROUP BY rank,ra.order_id,pizza_name,exclusions,extras,topping_id,topping_name
+    ) AS topping_names_sort
+GROUP BY order_id, pizza_name,rank
+ORDER BY rank                 
+
+```
+![image](https://user-images.githubusercontent.com/107137479/204118223-70d15019-e38a-4286-bf20-51d4ab31c57f.png)
+
