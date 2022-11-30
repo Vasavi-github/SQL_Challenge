@@ -614,6 +614,101 @@ ORDER BY rank
 
 ### **5.Generate an alphabetically ordered comma separated ingredient list for each pizza order from the customer_orders table and add a 2x in front of any relevant** ingredients
 For example: "Meat Lovers: 2xBacon, Beef, ... , Salami"
-``sql
 
+--5.Generate an alphabetically ordered comma separated ingredient list for each pizza order from the customer_orders table and add a 2x in front of any relevant ingredients
+-- For example: "Meat Lovers: 2xBacon, Beef, ... , Salami"
+```sql
+SELECT
+  order_id,
+  CONCAT(
+    pizza_name,
+    ': ',
+    STRING_AGG(
+      topping_name,
+      ', '
+      ORDER BY
+        topping_name
+    )
+  ) AS all_ingredients
+FROM
+  (
+    SELECT
+      rank,
+      order_id,
+      pizza_name,
+      CONCAT(
+        CASE
+          WHEN (SUM(count_toppings) + SUM(count_extra)) > 1 THEN (SUM(count_toppings) + SUM(count_extra)) || 'x'
+        END,
+        topping_name
+      ) AS topping_name
+    FROM
+      (
+        WITH rank_added AS (
+          SELECT
+            *,
+            ROW_NUMBER() OVER () AS rank
+          FROM
+            customer_orders_temp
+        )
+        SELECT
+          rank,
+          ra.order_id,
+          pizza_name,
+          topping_name,
+          CASE
+            WHEN exclusions != 'null'
+            AND t.topping_id IN (
+              SELECT
+                UNNEST(string_to_array(exclusions, ',') :: int [])
+            ) THEN 0
+            ELSE CASE
+              WHEN t.topping_id IN (
+                SELECT
+                  UNNEST(STRING_TO_ARRAY(r.toppings, ',') :: int [])
+              ) THEN COUNT(topping_name)
+              ELSE 0
+            END
+          END AS count_toppings,
+          CASE
+            WHEN extras != 'null'
+            AND t.topping_id IN (
+              SELECT
+                unnest(string_to_array(extras, ',') :: int [])
+            ) THEN count(topping_name)
+            ELSE 0
+          END AS count_extra
+        FROM
+          rank_added AS ra,
+          pizza_runner.pizza_toppings AS t,
+          pizza_runner.pizza_recipes AS r
+          JOIN pizza_runner.pizza_names AS n ON r.pizza_id = n.pizza_id
+        WHERE
+          ra.pizza_id = n.pizza_id
+        GROUP BY
+          pizza_name,
+          rank,
+          ra.order_id,
+          topping_name,
+          toppings,
+          exclusions,
+          extras,
+          t.topping_id
+      ) tt
+    WHERE
+      count_toppings > 0
+      OR count_extra > 0
+    GROUP BY
+      pizza_name,
+      rank,
+      order_id,
+      topping_name
+  ) cc
+GROUP BY
+  pizza_name,
+  rank,
+  order_id
+ORDER BY
+  rank ;
 ```
+![image](https://user-images.githubusercontent.com/107137479/204666480-f5f0c919-a367-45d7-a185-8e372e30a7fd.png)
