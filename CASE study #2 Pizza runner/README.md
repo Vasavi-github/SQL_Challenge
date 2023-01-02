@@ -615,8 +615,6 @@ ORDER BY rank
 ### **5.Generate an alphabetically ordered comma separated ingredient list for each pizza order from the customer_orders table and add a 2x in front of any relevant** ingredients
 For example: "Meat Lovers: 2xBacon, Beef, ... , Salami"
 
---5.Generate an alphabetically ordered comma separated ingredient list for each pizza order from the customer_orders table and add a 2x in front of any relevant ingredients
--- For example: "Meat Lovers: 2xBacon, Beef, ... , Salami"
 ```sql
 SELECT
   order_id,
@@ -718,3 +716,33 @@ ORDER BY
 <summary>
 D. Pricing and Ratings
 </summary>
+	
+### **5.If a Meat Lovers pizza costs $12 and Vegetarian costs $10 and there were no charges for changes - how much money has Pizza Runner made so far if there are no delivery fees?**
+```sql
+WITH profit AS (
+    SELECT
+    pizza_name,
+    CASE WHEN pizza_name='Meatlovers' THEN COUNT(pizza_name)*12
+    ELSE  COUNT(pizza_name)*10  END AS profit
+FROM 
+    customer_orders_temp AS c
+  JOIN pizza_runner.pizza_names AS n ON c.pizza_id = n.pizza_id
+  JOIN pizza_runner.runner_orders AS r ON c.order_id = r.order_id
+WHERE
+  pickup_time != 'null'
+  AND distance != 'null'
+  AND duration != 'null'
+GROUP BY pizza_name
+)
+SELECT 
+    SUM(profit)AS profit_in_dollars
+FROM profit;
+```
+![image](https://user-images.githubusercontent.com/107137479/210281181-0a957767-e955-435c-938d-e5061df1e758.png)
+
+	
+	
+	
+	
+	
+	
