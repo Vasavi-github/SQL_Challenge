@@ -271,7 +271,7 @@ SELECT * FROM temp_runner_orders
 
 <details>
 <summary> 
-Pizza Metrics
+A.Pizza Metrics
 </summary>
 
 
@@ -413,7 +413,7 @@ ORDER BY days;
 
 <details>
 <summary>
-Runner and Customer Experience
+B.Runner and Customer Experience
 </summary>
 	
 ###  **1. How many runners signed up for each 1 week period? (i.e. week starts 2021-01-01)**
@@ -506,7 +506,7 @@ ORDER BY runner_id;
 
 <details>
 <summary>
-Ingredient Optimisation
+C.Ingredient Optimisation
 </summary>
 
 ### **1. What are the standard ingredients for each pizza?**
@@ -712,3 +712,9 @@ ORDER BY
   rank ;
 ```
 ![image](https://user-images.githubusercontent.com/107137479/204666480-f5f0c919-a367-45d7-a185-8e372e30a7fd.png)
+
+</details>
+<details>
+<summary>
+D. Pricing and Ratings
+</summary>
