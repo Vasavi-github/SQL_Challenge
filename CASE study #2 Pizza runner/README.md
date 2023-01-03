@@ -717,7 +717,7 @@ ORDER BY
 D. Pricing and Ratings
 </summary>
 	
-### **5.If a Meat Lovers pizza costs $12 and Vegetarian costs $10 and there were no charges for changes - how much money has Pizza Runner made so far if there are no delivery fees?**
+### **1.If a Meat Lovers pizza costs $12 and Vegetarian costs $10 and there were no charges for changes - how much money has Pizza Runner made so far if there are no delivery fees?**
 ```sql
 WITH profit AS (
     SELECT
@@ -740,7 +740,11 @@ FROM profit;
 ```
 ![image](https://user-images.githubusercontent.com/107137479/210281181-0a957767-e955-435c-938d-e5061df1e758.png)
 
-	
+### **2. What if there was an additional $1 charge for any pizza extras?
+- Add cheese is $1 extra
+To calculate the totals with extras we need to calculate the number of extra ingredients in delivered pizzas and add this amount to the total profit calculated in the previous query. We use two CTE to do that: one CTE to count number of extras, and the other to calculate the profit without extras.
+
+This is option 1:	
 	
 	
 	
